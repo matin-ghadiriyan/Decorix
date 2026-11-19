@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+# Python bytecode
 __pycache__/
 *.py[cod]
 *$py.class
@@ -7,37 +7,46 @@ __pycache__/
 # Virtual environments
 .venv/
 venv/
-ToDoList.venv/
-ENV/
 env/
+ENV/
 
-# Flask instance folder (contains the SQLite DB)
-instance/
+# Distribution and packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+pip-wheel-metadata/
 
-# SQLite database
-*.db
-*.sqlite
-*.sqlite3
+# Testing and coverage
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+test-results/
 
-# Environment variables
-.env
+# Type checking and linting
+.mypy_cache/
+.pyright/
+.ruff_cache/
 
-# IDE / editor
+# IDEs and editors
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS files
+# Operating system
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Distribution / packaging
-build/
-dist/
-*.egg-info/
+# Environment variables
+.env
+.env.*
+!.env.example
 
-# Test / coverage
-.pytest_cache/
-.coverage
-htmlcov/
+# Logs
+*.log
