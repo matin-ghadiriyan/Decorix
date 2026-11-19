@@ -1,5 +1,6 @@
 from typing import Any , Callable , List , Dict , TYPE_CHECKING
-from exceptions import ValueIsNotValid
+from exceptions import ValueIsNotValid , TypeIsNotValid , KeyIsAlreadyExists
+from BaseClass import BaseClass
 
 if TYPE_CHECKING:
     from .BaseHooks import BaseHooks
@@ -30,7 +31,7 @@ class ReadDeleteHooks():
                 "Function is not valid"
             )
 
-class BaseHooks(ReadDeleteHooks):
+class BaseHooks(ReadDeleteHooks, BaseClass):
     TYPE:str = None
     def __init__(self):
         self._funcs: List[Callable] = []
@@ -42,9 +43,28 @@ class BaseHooks(ReadDeleteHooks):
         **funcs: Dict[str, Callable]
     ) -> None:
         for key, func in funcs.items():
-            self._funcs.append(func)
-            self._keys.append(key)
-            self._dictionary[key] = func
+            if not super().check_type(
+                valid_type=Callable,
+                value=func
+            ):
+                raise TypeIsNotValid(
+                    f"{type(func).__name__} is not valid"
+                )
+            elif not super().check_type(
+                valid_type=str,
+                value=key
+            ):
+                raise TypeIsNotValid(
+                    f"{type(key).__name__} is not valid"
+                )
+            elif self._dictionary.get(key):
+                raise KeyIsAlreadyExists(
+                    f"{key} is already exists"
+                )
+            else:
+                self._funcs.append(func)
+                self._keys.append(key)
+                self._dictionary[key] = func
 
     @property
     def funcs(self) -> List[Callable]:
@@ -62,7 +82,7 @@ class BaseHooks(ReadDeleteHooks):
                 if not callable(func):
                     raise ValueIsNotValid(f"{type(func).__name__} is not a valid function")
             self._funcs = funcs
-        raise ValueIsNotValid(f"{type(funcs).__name__} is not a valid list")
+        else:raise ValueIsNotValid(f"{type(funcs).__name__} is not a valid list")
 
     @property
     def keys(self) -> List[str]:
@@ -80,7 +100,7 @@ class BaseHooks(ReadDeleteHooks):
                 if not isinstance(key, str):
                     raise ValueIsNotValid(f"{type(key).__name__} is not a valid string")
             self._keys = keys
-        raise ValueIsNotValid(f"{type(keys).__name__} is not a valid list")
+        else:raise ValueIsNotValid(f"{type(keys).__name__} is not a valid list")
 
     @property
     def dictionary(self) -> Dict[str, Any]:
@@ -91,8 +111,8 @@ class BaseHooks(ReadDeleteHooks):
                 elif not callable(value):
                     raise ValueIsNotValid(f"{type(value).__name__} is not a valid function")
             return self._dictionary
-        
         raise ValueIsNotValid(f"{type(self._dictionary).__name__} is not a valid dictionary")
+    
     @dictionary.setter
     def dictionary(self, dictionary: Dict[str, Any]) -> None:
         if isinstance(dictionary, dict):
@@ -102,6 +122,6 @@ class BaseHooks(ReadDeleteHooks):
                 elif not callable(value): 
                     raise ValueIsNotValid(f"{type(value).__name__} is not a valid function")
             self._dictionary = dictionary
-        raise ValueIsNotValid(f"{type(dictionary).__name__} is not a valid dictionary")
+        else:raise ValueIsNotValid(f"{type(dictionary).__name__} is not a valid dictionary")
 
 

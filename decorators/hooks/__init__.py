@@ -14,7 +14,8 @@ class Before(BaseHooks):
         def decorator(func: Callable) -> Callable:
             @wraps(func)
             def wrapper(*args, **kwargs)->Any:
-                self._dictionary.get(key)()
+                if self._dictionary[key]:
+                    self._dictionary[key]()
                 return func(*args, **kwargs)
             return wrapper
         return decorator
@@ -32,7 +33,8 @@ class After(BaseHooks):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 resulte = func(*args, **kwargs)
-                self._dictionary.get(key)(resulte)
+                if self._dictionary[key]:
+                    self._dictionary.get(key)()
                 return resulte
             return wrapper
         return decorator
@@ -50,9 +52,9 @@ class Finally(BaseHooks):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 try:
-                    resulte = func(*args, **kwargs)
+                    func(*args, **kwargs)
                 finally:
-                    self._dictionary.get(key)(resulte)
-                return resulte
+                    if self._dictionary[key]:
+                        self._dictionary.get(key)()
             return wrapper
         return decorator

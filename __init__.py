@@ -1,4 +1,5 @@
 from typing import Callable , Any
+from functools import wraps
 
 class Decorex:
     def validate(
