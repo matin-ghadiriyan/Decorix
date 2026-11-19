@@ -52,7 +52,6 @@ class Finally(BaseHooks):
         def decorator(func: Callable) -> Callable:
             @wraps(func)
             def wrapper(*args, **kwargs):
-                result = None
                 try:
                     result = func(*args, **kwargs)
                     return result
