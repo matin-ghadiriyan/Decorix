@@ -1,9 +1,10 @@
 from functools import wraps
 from typing import Callable , Any
 from decorators.hooks.BaseHooks import BaseHooks
+from BaseClass import BaseClass
 
-class Before(BaseHooks):
-    TYPE:str = "Before"
+class Before(BaseHooks , BaseClass):
+    TYPE = "Before"
     def __init__(self):
         super().__init__()
 
@@ -14,14 +15,13 @@ class Before(BaseHooks):
         def decorator(func: Callable) -> Callable:
             @wraps(func)
             def wrapper(*args, **kwargs)->Any:
-                if self._dictionary[key]:
-                    self._dictionary[key]()
+                super().get_data(self.dictionary, key)()
                 return func(*args, **kwargs)
             return wrapper
         return decorator
 
-class After(BaseHooks):
-    TYPE:str = "After"
+class After(BaseHooks , BaseClass):
+    TYPE = "After"
     def __init__(self):
         super().__init__()
 
@@ -33,14 +33,16 @@ class After(BaseHooks):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 resulte = func(*args, **kwargs)
-                if self._dictionary[key]:
-                    self._dictionary.get(key)()
+                super().get_data(
+                    self._dictionary,
+                    key
+                )(resulte)
                 return resulte
             return wrapper
         return decorator
 
-class Finally(BaseHooks):
-    TYPE:str = "Finally"
+class Finally(BaseHooks , BaseClass):
+    TYPE = "Finally"
     def __init__(self):
         super().__init__()
 
@@ -52,9 +54,12 @@ class Finally(BaseHooks):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 try:
-                    func(*args, **kwargs)
+                    resulte = func(*args, **kwargs)
                 finally:
-                    if self._dictionary[key]:
-                        self._dictionary.get(key)()
+                    resulte = super().get_data(
+                        self._dictionary,
+                        key
+                    )()
+                return resulte
             return wrapper
         return decorator

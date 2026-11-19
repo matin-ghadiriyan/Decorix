@@ -9,3 +9,7 @@ class TypeIsNotValid(Exception):
 class KeyIsAlreadyExists(Exception):
     """Raised when the key is already exists"""
     pass
+
+class KeyIsNotInDictionary(Exception):
+    """Raised when the key is not in dictionary"""
+    pass

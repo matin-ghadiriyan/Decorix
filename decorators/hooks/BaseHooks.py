@@ -30,9 +30,11 @@ class ReadDeleteHooks():
             raise ValueIsNotValid(
                 "Function is not valid"
             )
+    def removes_keys(self:"BaseHooks") -> None:self._keys.clear()
+    def removes_funcs(self:"BaseHooks") -> None:self._funcs.clear()
 
 class BaseHooks(ReadDeleteHooks, BaseClass):
-    TYPE:str = None
+    TYPE = None
     def __init__(self):
         self._funcs: List[Callable] = []
         self._keys: List[str] = []
@@ -40,7 +42,7 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
 
     def register(
         self,
-        **funcs: Dict[str, Callable]
+        **funcs: Callable
     ) -> None:
         for key, func in funcs.items():
             if not super().check_type(
@@ -67,7 +69,7 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
                 self._dictionary[key] = func
 
     @property
-    def funcs(self) -> List[Callable]:
+    def func(self) -> List[Callable]:
         if isinstance(self._funcs, list):
             for funcs in self._funcs:
                 if not callable(funcs):
@@ -75,8 +77,8 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
             return self._funcs
         raise ValueIsNotValid(f"{type(self._funcs).__name__} is not a valid list")
 
-    @funcs.setter
-    def funcs(self, funcs: List[Callable]) -> None:
+    @func.setter
+    def func(self, funcs: List[Callable]) -> None:
         if isinstance(funcs, list):
             for func in funcs:
                 if not callable(func):
@@ -85,7 +87,7 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
         else:raise ValueIsNotValid(f"{type(funcs).__name__} is not a valid list")
 
     @property
-    def keys(self) -> List[str]:
+    def key(self) -> List[str]:
         if isinstance(self._keys, list):
             for key in self._keys:
                 if not isinstance(key, str):
@@ -93,8 +95,8 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
             return self._keys
         raise ValueIsNotValid(f"{type(self._keys).__name__} is not a valid list")   
 
-    @keys.setter
-    def keys(self, keys: List[str]) -> None:
+    @key.setter
+    def key(self, keys: List[str]) -> None:
         if isinstance(keys, list):
             for key in keys:
                 if not isinstance(key, str):
@@ -103,7 +105,7 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
         else:raise ValueIsNotValid(f"{type(keys).__name__} is not a valid list")
 
     @property
-    def dictionary(self) -> Dict[str, Any]:
+    def dictionarys(self) -> Dict[str, Any]:
         if isinstance(self._dictionary, dict):
             for key, value in self._dictionary.items():
                 if not isinstance(key, str):
@@ -113,8 +115,8 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
             return self._dictionary
         raise ValueIsNotValid(f"{type(self._dictionary).__name__} is not a valid dictionary")
     
-    @dictionary.setter
-    def dictionary(self, dictionary: Dict[str, Any]) -> None:
+    @dictionarys.setter
+    def dictionarys(self, dictionary: Dict[str, Any]) -> None:
         if isinstance(dictionary, dict):
             for key, value in dictionary.items():
                 if not isinstance(key, str):
