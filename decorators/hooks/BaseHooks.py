@@ -30,8 +30,10 @@ class ReadDeleteHooks():
             raise ValueIsNotValid(
                 "Function is not valid"
             )
-    def removes_keys(self:"BaseHooks") -> None:self._keys.clear()
-    def removes_funcs(self:"BaseHooks") -> None:self._funcs.clear()
+    def removes_all(self:"BaseHooks") -> None:
+        self._funcs.clear()
+        self._keys.clear()
+        self._dictionary.clear()
 
 class BaseHooks(ReadDeleteHooks, BaseClass):
     TYPE = None
@@ -74,7 +76,7 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
             for funcs in self._funcs:
                 if not callable(funcs):
                     raise ValueIsNotValid(f"{type(funcs).__name__} is not a valid function")
-            return self._funcs
+            return self._funcs.copy()
         raise ValueIsNotValid(f"{type(self._funcs).__name__} is not a valid list")
 
     @func.setter
@@ -92,7 +94,7 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
             for key in self._keys:
                 if not isinstance(key, str):
                     raise ValueIsNotValid(f"{type(key).__name__} is not a valid string")
-            return self._keys
+            return self._keys.copy()
         raise ValueIsNotValid(f"{type(self._keys).__name__} is not a valid list")   
 
     @key.setter
@@ -112,7 +114,7 @@ class BaseHooks(ReadDeleteHooks, BaseClass):
                     raise ValueIsNotValid(f"{type(key).__name__} is not a valid string")
                 elif not callable(value):
                     raise ValueIsNotValid(f"{type(value).__name__} is not a valid function")
-            return self._dictionary
+            return self._dictionary.copy()
         raise ValueIsNotValid(f"{type(self._dictionary).__name__} is not a valid dictionary")
     
     @dictionarys.setter

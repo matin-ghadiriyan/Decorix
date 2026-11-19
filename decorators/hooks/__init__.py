@@ -1,9 +1,8 @@
 from functools import wraps
 from typing import Callable , Any
 from decorators.hooks.BaseHooks import BaseHooks
-from BaseClass import BaseClass
 
-class Before(BaseHooks , BaseClass):
+class Before(BaseHooks):
     TYPE = "Before"
     def __init__(self):
         super().__init__()
@@ -15,12 +14,12 @@ class Before(BaseHooks , BaseClass):
         def decorator(func: Callable) -> Callable:
             @wraps(func)
             def wrapper(*args, **kwargs)->Any:
-                super().get_data(self._dictionary, key)()
+                self.get_data(self._dictionary, key)()
                 return func(*args, **kwargs)
             return wrapper
         return decorator
 
-class After(BaseHooks , BaseClass):
+class After(BaseHooks):
     TYPE = "After"
     def __init__(self):
         super().__init__()
@@ -33,7 +32,7 @@ class After(BaseHooks , BaseClass):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 resulte = func(*args, **kwargs)
-                super().get_data(
+                self.get_data(
                     self._dictionary,
                     key
                 )(resulte)
@@ -41,7 +40,7 @@ class After(BaseHooks , BaseClass):
             return wrapper
         return decorator
 
-class Finally(BaseHooks , BaseClass):
+class Finally(BaseHooks):
     TYPE = "Finally"
     def __init__(self):
         super().__init__()
@@ -56,7 +55,7 @@ class Finally(BaseHooks , BaseClass):
                 try:
                     resulte = func(*args, **kwargs)
                 finally:
-                    resulte = super().get_data(
+                    resulte = self.get_data(
                         self._dictionary,
                         key
                     )()
