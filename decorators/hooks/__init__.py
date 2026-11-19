@@ -15,7 +15,7 @@ class Before(BaseHooks , BaseClass):
         def decorator(func: Callable) -> Callable:
             @wraps(func)
             def wrapper(*args, **kwargs)->Any:
-                super().get_data(self.dictionary, key)()
+                super().get_data(self._dictionary, key)()
                 return func(*args, **kwargs)
             return wrapper
         return decorator
