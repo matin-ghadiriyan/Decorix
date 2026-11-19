@@ -10,26 +10,6 @@ class ReadDeleteHooks():
     def get_key(self:"BaseHooks") -> List[str]:return list(self._keys)
     def get_funcs(self:"BaseHooks") -> List[Callable]:return list(self._funcs)
     "Remove Data"
-    def remove_key(
-        self:"BaseHooks",
-        key: str
-    ) -> None:
-        if key in self._keys:
-            self._keys.remove(key)
-        else:
-            raise ValueIsNotValid(
-                "Key is not valid"
-            )
-    def remove_func(
-        self:"BaseHooks",
-        func: Callable
-    ) -> None:
-        if func in self._funcs:
-            self._funcs.remove(func)
-        else:
-            raise ValueIsNotValid(
-                "Function is not valid"
-            )
     def removes_all(self:"BaseHooks") -> None:
         self._funcs.clear()
         self._keys.clear()

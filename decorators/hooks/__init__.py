@@ -52,13 +52,13 @@ class Finally(BaseHooks):
         def decorator(func: Callable) -> Callable:
             @wraps(func)
             def wrapper(*args, **kwargs):
+                result = None
                 try:
-                    resulte = func(*args, **kwargs)
+                    result = func(*args, **kwargs)
+                    return result
                 finally:
-                    resulte = self.get_data(
-                        self._dictionary,
-                        key
-                    )()
-                return resulte
+                    hook = super().get_data(self._dictionary, key)
+                    if hook is not None:
+                        hook()
             return wrapper
         return decorator
