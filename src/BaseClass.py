@@ -1,5 +1,5 @@
 from typing import Any , Dict
-from exceptions import KeyIsNotInDictionary
+from src.exceptions import KeyIsNotInDictionary
 
 class BaseClass():
     def check_type(

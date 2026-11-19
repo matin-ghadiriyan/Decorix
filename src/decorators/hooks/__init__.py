@@ -1,6 +1,6 @@
 from functools import wraps
 from typing import Callable , Any
-from decorators.hooks.BaseHooks import BaseHooks
+from src.decorators.hooks.BaseHooks import BaseHooks
 
 class Before(BaseHooks):
     TYPE = "Before"
@@ -56,8 +56,6 @@ class Finally(BaseHooks):
                     result = func(*args, **kwargs)
                     return result
                 finally:
-                    hook = super().get_data(self._dictionary, key)
-                    if hook is not None:
-                        hook()
+                    self.get_data(self._dictionary, key)()
             return wrapper
         return decorator
