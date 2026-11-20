@@ -1,6 +1,7 @@
 from functools import wraps
 from typing import Callable , Any
 from src.decorators.hooks.BaseHooks import BaseHooks
+import traceback
 
 class Before(BaseHooks):
     TYPE = "Before"
@@ -53,9 +54,33 @@ class Finally(BaseHooks):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 try:
-                    result = func(*args, **kwargs)
-                    return result
+                    return func(*args, **kwargs) 
                 finally:
                     self.get_data(self._dictionary, key)()
+            return wrapper
+        return decorator
+
+class Handler(BaseHooks):
+    TYPE = "Handler"
+    def __init__(self):
+        super().__init__()
+
+    def handler(
+        self,
+        key:str
+    ) -> Any:
+        def decorator(func: Callable) -> Callable:
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                try:
+                    return func(*args, **kwargs) 
+                except Exception as e:
+                    error = {
+                        "error":type(e).__name__,
+                        "exception":e,
+                        "message":str(e),
+                        "traceback":traceback.format_exc()
+                    }
+                    self.get_data(self._dictionary, key)(**error)
             return wrapper
         return decorator

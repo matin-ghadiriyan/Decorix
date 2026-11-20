@@ -1,8 +1,8 @@
 from typing import Callable , Any
 from functools import wraps
-from app import App
+from src.app import App
 
-class Decorex(App):
+class Decorix(App):
     def validate(
             self,
             error: Callable,

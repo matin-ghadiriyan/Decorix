@@ -9,6 +9,7 @@ class ReadDeleteHooks():
     "Read Data"
     def get_key(self:"BaseHooks") -> List[str]:return list(self._keys)
     def get_funcs(self:"BaseHooks") -> List[Callable]:return list(self._funcs)
+    def get_dictionary(self:"BaseHooks") -> Dict[str : Callable]:return dict(self._dictionary)
     "Remove Data"
     def removes_all(self:"BaseHooks") -> None:
         self._funcs.clear()
