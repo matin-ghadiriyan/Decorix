@@ -1,121 +1,150 @@
 # Decorix
 
-**A Python library for managing decorators and function execution hooks.**
+**Decorix** is a Python library focused on function decorators and hook-based execution management.
 
-Decorix provides a simple way to manage function hooks and create conditional decorators. It allows you to execute custom functions before, after, or regardless of the execution result of another function.
+It provides a structured way to execute custom functions before, after, and finally around the execution of another function. It also includes an exception-handling mechanism that allows developers to capture and process error information.
 
 ## Features
 
-- **Before Hook:** Execute a registered function before the decorated function.
-- **After Hook:** Execute a registered function after the decorated function and receive its return value.
-- **Finally Hook:** Execute a registered function regardless of whether the decorated function succeeds or raises an exception.
-- **Hook Registration:** Register and manage functions using unique keys.
-- **Conditional Decorators:** Validate conditions before executing a decorated function.
-- **Custom Exceptions:** Handle invalid values, types, and missing or duplicate keys.
+- **Before Hooks:** Execute registered functions before the decorated function.
+- **After Hooks:** Execute registered functions after successful function execution and receive its return value.
+- **Finally Hooks:** Execute registered functions when the decorated function finishes, whether it succeeds or raises an exception.
+- **Exception Handler:** Capture exception information and pass it to registered handler functions.
+- **Multiple Hooks:** Register different hooks using separate keys.
+- **Reusable Decorators:** Apply registered hooks to multiple functions.
+- **Function Metadata Preservation:** Preserve the original function metadata using `functools.wraps`.
 
-## Project Structure
+## Hook Types
+
+| Hook | Description |
+|---|---|
+| `Before` | Runs before the original function. |
+| `After` | Runs after successful execution and receives the return value. |
+| `Finally` | Runs when the function finishes, including when an exception occurs. |
+| `Handler` | Captures exceptions and provides their information to a registered callback. |
+
+## Usage
+
+The following examples assume that a configured Decorix instance is available as `app`.
+
+### 1. Before Hook
+
+```python
+app.b().register(
+    start=lambda: print("Before execution")
+)
+
+@app.b().before("start")
+def worker():
+    print("Working...")
+
+worker()
+```
+
+### 2. After Hook
+
+After hooks receive the return value of the decorated function.
+
+```python
+app.a().register(
+    result=lambda value: print("Result:", value)
+)
+
+@app.a().after("result")
+def worker():
+    return "Task completed"
+
+worker()
+```
+
+### 3. Finally Hook
+
+Finally hooks execute even when the decorated function raises an exception.
+
+```python
+app.f().register(
+    finish=lambda: print("Execution finished")
+)
+
+@app.f()._finally("finish")
+def worker():
+    print("Working...")
+    return "Done"
+
+worker()
+```
+
+### 4. Exception Handling
+
+The Handler mechanism provides access to exception details.
+
+```python
+app.h().register(
+    error=lambda error, message, traceback, exception:
+        print(f"Error: {error}")
+)
+
+@app.h().handler("error")
+def worker():
+    return 12 + "hello"
+
+worker()
+```
+
+The handler callback receives:
+
+| Argument | Description |
+|---|---|
+| `error` | Exception class name. |
+| `message` | Exception message. |
+| `traceback` | Full traceback as a string. |
+| `exception` | Original exception object. |
+
+## Combining Hooks
+
+Different hook types can be applied to the same function.
+
+```python
+@app.b().before("start")
+@app.a().after("result")
+@app.f()._finally("finish")
+def worker():
+    print("Working...")
+    return "Completed"
+
+worker()
+```
+
+For a successful execution, the intended lifecycle is:
 
 ```text
-Decorix/
-│
-├── src/
-│   ├── decorators/
-│   │   └── hooks/
-│   │       ├── BaseHooks.py
-│   │       └── __init__.py
-│   │
-│   ├── BaseClass.py
-│   ├── app.py
-│   ├── exceptions.py
-│   └── __init__.py
-│
-├── .gitignore
-├── CHANGELOG.md
-└── README.md
+Before
+  |
+Original Function
+  |
+After
+  |
+Finally
 ```
 
-## Hooks
+If the original function raises an exception, the After hook is skipped, while the Finally hook still executes.
 
-Decorix currently provides three types of hooks.
+## Testing
 
-### Before
+Decorix includes tests for hook execution and exception handling.
 
-Executes a registered function before the decorated function.
+Run the test suite from the project root:
 
-```python
-@app.before("before_task")
-def my_function():
-    print("Function is about to execute")
+```bash
+python -m unittest discover -s test -v
 ```
 
-### After
+## Project Status
 
-Executes a registered function after the decorated function and passes the original function's return value to it.
+Decorix is under active development.
 
-```python
-@app.after("after_task")
-def my_function():
-    print("Function executed successfully")
-```
-
-### Finally
-
-Executes a registered function after the decorated function finishes, whether it returns normally or raises an exception.
-
-```python
-@app._finally("finally_task")
-def my_function():
-    print("Execution finished")
-```
-
-## Hook Registration
-
-Functions are registered using unique string keys.
-
-```python
-app.register(
-    before_task=lambda: print("Before"),
-    after_task=lambda result: print(result),
-    finally_task=lambda: print("Finally")
-)
-```
-
-Each hook uses its corresponding registered key.
-
-## Conditional Decorators
-
-The `validate` decorator checks multiple conditions before executing the original function.
-
-```python
-@app.validate(
-    error_handler,
-    condition_one,
-    condition_two
-)
-def my_function():
-    print("All conditions passed")
-```
-
-If any condition returns `False`, the error handler is executed instead of the original function.
-
-## Exceptions
-
-Decorix defines custom exceptions for different validation and registration errors:
-
-- `ValueIsNotValid`
-- `TypeIsNotValid`
-- `KeyIsAlreadyExists`
-- `KeyIsNotInDictionary`
-
-## Requirements
-
-- Python
-- No third-party dependencies are currently required by the source code.
-
-## Development Status
-
-Decorix is currently under development. Its API and internal structure may change in future releases.
+Features, APIs, and internal implementation may change as the project evolves.
 
 ## License
 
-See the `LICENSE` file for licensing information.
+License information will be added when the project license is established.
