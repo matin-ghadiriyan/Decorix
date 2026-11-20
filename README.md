@@ -136,7 +136,7 @@ Decorix includes tests for hook execution and exception handling.
 Run the test suite from the project root:
 
 ```bash
-python -m unittest discover -s test -v
+python -m test.test_hooks
 ```
 
 ## Project Status
