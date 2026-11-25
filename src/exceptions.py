@@ -13,3 +13,7 @@ class KeyIsAlreadyExists(Exception):
 class KeyIsNotInDictionary(Exception):
     """Raised when the key is not in dictionary"""
     pass
+
+class PasswordIsNotValid(Exception):
+    """Raised when the password is not valid"""
+    pass

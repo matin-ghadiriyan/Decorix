@@ -1,6 +1,7 @@
 from src.decorators.hooks import After , Before , Finally , Handler
+from src.decorators.User import User
 
-class App():
+class App(User):
     def __init__(self):
         self._Befores = Before()
         self._Afters = After()
