@@ -17,3 +17,7 @@ class KeyIsNotInDictionary(Exception):
 class PasswordIsNotValid(Exception):
     """Raised when the password is not valid"""
     pass
+
+class UserIsNotLoggedIn(Exception):
+    """Raised when the user is not logged in"""
+    pass

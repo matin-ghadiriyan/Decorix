@@ -1,4 +1,10 @@
+from typing import Any, Dict
+
 class Model_User:
-    def __init__(self, username:str, password:str) -> None:
+    def __init__(
+        self,
+        username:str,
+        password:str
+    ) -> None:
         self.username = username
         self.password = password
